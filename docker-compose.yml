@@ -1,0 +1,59 @@
+version: '2.1'
+services:
+    zookeeper:
+        build:
+            context: .
+            dockerfile: ./dockerfile/cp-zookeeper.Dockerfile
+        ports:
+            - "2181:2181"
+            
+    kafka:
+        build:
+            context: .
+            dockerfile: ./dockerfile/cp-kafka.Dockerfile
+        ports:
+            - "9092"
+        depends_on:
+            zookeeper:
+                condition: service_started
+        links:
+            - zookeeper
+        environment:
+            ZOOKEEPER_HOST: "zookeeper:2181"
+        healthcheck:
+            test: ["CMD", "bash", "-c", "unset" , "JMX_PORT" ,";" ,"kafka-topics","--zookeeper","zookeeper:2181","--list"]
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            
+    schema-registry:
+        build:
+            context: .
+            dockerfile: ./dockerfile/cp-schema-registry.Dockerfile
+        ports:
+            - "8081:8081"
+        depends_on:
+            zookeeper:
+                condition: service_started
+            kafka:
+                condition: service_healthy
+        links:
+            - zookeeper
+            - kafka
+          
+    mysql:
+        image: mysql:5.6
+        ports:
+            - "3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: nik123
+          
+    kafka-manager:
+        image: sheepkiller/kafka-manager
+        ports:
+            - "9000:9000"
+        environment:
+            ZK_HOSTS: zookeeper:2181
+        depends_on:
+            - zookeeper
+            - kafka
+            - schema-registry

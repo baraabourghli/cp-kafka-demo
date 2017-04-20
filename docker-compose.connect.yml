@@ -1,0 +1,22 @@
+version: '2.1'
+services:
+    kafka-connect:
+        build:
+            context: .
+            dockerfile: ./dockerfile/cp-kafka-connect.Dockerfile
+        ports:
+            - "8083:8083"
+        
+    kafka-connect-ui:
+        image: landoop/kafka-connect-ui:0.9.0
+        ports:
+            - "8000:8000"
+        environment:
+            CONNECT_URL: kafka-connect:8083
+        depends_on:
+            - kafka-connect
+            
+networks:
+    default:
+        external:
+            name: cpkafkademo_default
