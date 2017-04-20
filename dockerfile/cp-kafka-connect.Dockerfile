@@ -4,6 +4,7 @@ MAINTAINER nicholedean
 COPY ./cp-properties/connect-avro-distributed.properties /opt/confluent/etc/schema-registry/connect-avro-distributed.properties
 COPY ./share/java/kafka/kafka-connect-jdbc/mysql-connector-java-5.1.38.jar /opt/confluent/share/java/kafka/kafka-connect-jdbc/mysql-connector-java-5.1.38.jar
 
+ENV CLASSPATH=/opt/confluent/share/java/kafka/kafka-connect-jdbc/*
 WORKDIR /opt/confluent
 
 
