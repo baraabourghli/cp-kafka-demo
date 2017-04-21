@@ -1,0 +1,13 @@
+{
+  "name": "dev-myjsdb-adhoc_candidate_gift_voucher",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "tasks.max": "1",
+    "connection.url": "YourDBConnectionString",
+    "table.whitelist": "adhoc_candidate_gift_voucher",
+    "mode": "timestamp+incrementing",
+    "timestamp.column.name": "last_update",
+    "incrementing.column.name": "candidate_id",
+    "topic.prefix": "dev-myjsdb-"
+  }
+}
