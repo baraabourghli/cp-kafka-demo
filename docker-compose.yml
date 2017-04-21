@@ -39,6 +39,15 @@ services:
         links:
             - zookeeper
             - kafka
+            
+    kafka-rest:
+        build:
+            context: .
+            dockerfile: ./dockerfile/cp-kafka-rest.Dockerfile
+        ports:
+            - "8082"
+        depends_on:
+            - schema-registry
           
     mysql:
         image: mysql:5.6
